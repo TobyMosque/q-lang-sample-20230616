@@ -1,14 +1,14 @@
-import { QSsrContext } from '@quasar/app-vite';
 import { defineStore } from 'pinia';
 import { Quasar } from 'quasar';
 import { ref } from 'vue';
+import type { QSsrContext } from '@quasar/app-vite';
+import type { Locales } from 'src/boot/i18n';
 
 const langList = import.meta.glob(
   '../../node_modules/quasar/lang/(de|en-US|es|fr|pt-BR).mjs'
 );
 
 type LocaleStore = ReturnType<typeof useLocaleStore>;
-export type Locales = 'de' | 'en-US' | 'es' | 'fr' | 'pt-BR';
 export const useLocaleStore = defineStore('locale', () => {
   const locale = ref<Locales>('en-US');
   const detected = ref<Locales>();

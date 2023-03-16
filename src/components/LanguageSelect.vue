@@ -12,11 +12,12 @@
 </template>
 
 <script setup lang="ts">
-import { QSelectProps, QSelectSlots } from 'quasar';
-import { Locales, useLocaleStore } from 'src/stores/locale';
+import { useLocaleStore } from 'src/stores/locale';
 import { computed, useSlots, useAttrs } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import type { QSelectProps, QSelectSlots } from 'quasar';
+import type { Locales } from 'src/boot/i18n';
 
 export interface LanguageSelectProps
   extends Omit<QSelectProps, 'options' | 'label' | 'modelValue'> {

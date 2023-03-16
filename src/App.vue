@@ -5,8 +5,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { preFetch } from 'quasar/wrappers';
-import { Locales, useLocaleStore } from 'src/stores/locale';
+import { useLocaleStore } from 'src/stores/locale';
 import { useI18n } from 'vue-i18n';
+import type { Locales } from 'src/boot/i18n';
 
 export default defineComponent({
   preFetch: preFetch(async ({ store, currentRoute, ssrContext, redirect }) => {
