@@ -1,7 +1,7 @@
 <template>
   <q-select
     v-bind="_props"
-    v-model="modelValue"
+    :model-value="modelValue"
     :label="t('language')"
     :options="options"
   >
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { useLocaleStore } from 'src/stores/locale';
-import { computed, useSlots, useAttrs } from 'vue';
+import { watch, computed, useSlots, useAttrs } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import type { QSelectProps, QSelectSlots } from 'quasar';
@@ -70,13 +70,14 @@ function getRoute(val: Locales) {
   };
 }
 
-const modelValue = computed({
-  get() {
-    return (route.params.lang as Locales) || localeStore.detected;
-  },
-  async set(val: Locales) {
-    await localeStore.setLocale(val);
+const modelValue = computed(
+  () => (route.params.lang as Locales) || localeStore.detected
+);
+watch(
+  () => modelValue.value,
+  async () => {
+    await localeStore.setLocale(modelValue.value);
     locale.value = localeStore.locale;
-  },
-});
+  }
+);
 </script>
