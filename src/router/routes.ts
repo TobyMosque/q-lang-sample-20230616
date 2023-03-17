@@ -1,8 +1,10 @@
+import { supportedLanguages } from 'src/i18n';
 import { RouteRecordRaw } from 'vue-router';
 
+const supportedLanguagePaths = supportedLanguages.join('|');
 const routes: RouteRecordRaw[] = [
   {
-    path: '/:lang(de|en-US|es|fr|pt-BR)?',
+    path: `/:lang(${supportedLanguagePaths})?`,
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {

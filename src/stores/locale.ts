@@ -2,15 +2,17 @@ import { defineStore } from 'pinia';
 import { Quasar } from 'quasar';
 import { ref } from 'vue';
 import type { QSsrContext } from '@quasar/app-vite';
-import type { Locales } from 'src/boot/i18n';
 
-const langList = import.meta.glob(
-  '../../node_modules/quasar/lang/(de|en-US|es|fr|pt-BR).mjs'
-);
+import {
+  defaultLocale,
+  Locales,
+  quasarTranslationPackages,
+  supportedLanguages,
+} from 'src/i18n';
 
 type LocaleStore = ReturnType<typeof useLocaleStore>;
 export const useLocaleStore = defineStore('locale', () => {
-  const locale = ref<Locales>('en-US');
+  const locale = ref<Locales>(defaultLocale);
   const detected = ref<Locales>();
 
   function detectLocaleInner(ssrContext?: QSsrContext | null): Locales {
@@ -32,20 +34,14 @@ export const useLocaleStore = defineStore('locale', () => {
     }
 
     for (const locale of languages) {
-      switch (true) {
-        case locale.startsWith('de'):
-          return 'de';
-        case locale.startsWith('en'):
-          return 'en-US';
-        case locale.startsWith('es'):
-          return 'es';
-        case locale.startsWith('fr'):
-          return 'fr';
-        case locale.startsWith('pt'):
-          return 'pt-BR';
+      const matchedLanguage = supportedLanguages.find(
+        (lang) => locale.substring(0, 2) === lang.substring(0, 2)
+      );
+      if (matchedLanguage !== undefined) {
+        return matchedLanguage;
       }
     }
-    return 'en-US';
+    return defaultLocale;
   }
 
   function detectLocale(
@@ -55,7 +51,7 @@ export const useLocaleStore = defineStore('locale', () => {
     if (!detected.value) {
       detected.value = detectLocaleInner(ssrContext);
     }
-    return detected.value || 'en-US';
+    return detected.value || defaultLocale;
   }
 
   async function setLocale(
@@ -71,7 +67,7 @@ export const useLocaleStore = defineStore('locale', () => {
     this: LocaleStore,
     ssrContext?: QSsrContext | null
   ) {
-    const _lang = await langList[
+    const _lang = await quasarTranslationPackages[
       `../../node_modules/quasar/lang/${locale.value}.mjs`
     ]();
     Quasar.lang.set(_lang.default, ssrContext);
