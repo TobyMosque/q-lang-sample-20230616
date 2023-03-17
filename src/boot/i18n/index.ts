@@ -1,12 +1,11 @@
 import { boot } from 'quasar/wrappers';
 import { createI18n } from 'vue-i18n';
 
-import messages from 'src/i18n';
+import messages, { defaultLocale } from 'src/i18n';
 
 export type MessageLanguages = keyof typeof messages;
 // Type-define 'en-US' as the master schema for the resource
-export type MessageSchema = (typeof messages)['en-US'];
-export type Locales = keyof typeof messages;
+export type MessageSchema = (typeof messages)[typeof defaultLocale];
 
 // See https://vue-i18n.intlify.dev/guide/advanced/typescript.html#global-resource-schema-type-definition
 /* eslint-disable @typescript-eslint/no-empty-interface */
@@ -31,7 +30,7 @@ declare module 'pinia' {
 type I18nGlobal = ReturnType<typeof createI18nInternal>['global'];
 function createI18nInternal() {
   return createI18n({
-    locale: 'en-US',
+    locale: defaultLocale,
     legacy: false,
     messages,
     globalInjection: true,
